@@ -10,16 +10,13 @@ def encrypt_caesar(plaintext):
     ''
    """
     ciphertext=""
-    letters=[]
     for i in plaintext:
-        letters.append(i)
-    for i in range(len(letters)):
-        if 'A'<=letters[i]<='W' or 'a'<=letters[i]<='w':
-            ciphertext+=chr(ord(letters[i])+3)
-        elif 'X'<=letters[i]<='Z' or 'x'<=letters[i]<='z':
-            ciphertext+=chr(ord(letters[i])-23)
-        elif '!' <= letters[i] <= '@':
-            ciphertext += letters[i]
+        if 'A'<=i<='W' or 'a'<=i<='w':
+            ciphertext+=chr(ord(i)+3)
+        elif 'X'<=i<='Z' or 'x'<=i<='z':
+            ciphertext+=chr(ord(i)-23)
+        elif '!' <= i <= '@':
+            ciphertext += i
     print(ciphertext)
     return ciphertext
 encrypt_caesar(str(input("Введите строку, чтобы ее закодировать:")))
@@ -35,16 +32,13 @@ def decrypt_caesar(ciphertext):
     >>> decrypt_caesar("")
     """
     plaintext = ""
-    letters = []
     for i in ciphertext:
-        letters.append(i)
-    for i in range(len(letters)):
-        if 'D' <= letters[i] <= 'Z' or 'd' <= letters[i] <= 'z':
-            plaintext += chr(ord(letters[i]) - 3)
-        elif 'A' <= letters[i] <= 'C' or 'a' <= letters[i] <= 'c':
-            plaintext += chr(ord(letters[i]) + 23)
-        elif '!'<=letters[i]<='@':
-            plaintext +=letters[i]
+        if 'D' <= i <= 'Z' or 'd' <= i <= 'z':
+            plaintext += chr(ord(i) - 3)
+        elif 'A' <= i <= 'C' or 'a' <= i <= 'c':
+            plaintext += chr(ord(i) + 23)
+        elif '!'<= i <='@':
+            plaintext += i
     print(plaintext)
     return plaintext
 decrypt_caesar(str(input("Введите строку, чтобы ее раскодировать:")))
