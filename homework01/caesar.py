@@ -17,7 +17,6 @@ def encrypt_caesar(plaintext):
             ciphertext+=chr(ord(i)-23)
         elif '!' <= i <= '@':
             ciphertext += i
-    print(ciphertext)
     return ciphertext
 
 def decrypt_caesar(ciphertext):
@@ -38,5 +37,4 @@ def decrypt_caesar(ciphertext):
             plaintext += chr(ord(i) + 23)
         elif '!'<= i <='@':
             plaintext += i
-    print(plaintext)
     return plaintext
