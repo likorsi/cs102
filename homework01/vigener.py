@@ -7,20 +7,24 @@ def encrypt_vigenere(plaintext, keyword):
     >>> encrypt_vigenere("ATTACKATDAWN", "LEMON")
     'LXFOPVEFRNHR'
     """
-    d = {}
-    v=0 # v - value
+    d = {} #  словарь (d-dictionary) для заглавных букв алфавита
+    v=0 # v - value, номер буквы в алфавите
+    #  заполним ключи и значения словаря буквами и их номером в алфавите соответственно:
     for i in range(ord('A'), ord('Z')):
         d[chr(i)] = v
         v+=1
-    d_small = {}
+    d_small = {} #  словарь для строчных букв алфавита
     v=0
+    #  ананлогичное заполнение словаря, но строчными буквами:
     for i in range(ord('a'), ord('z')):
         d_small[chr(i)] = v
         v+=1
     ciphertext = ""
+    #  продублируем ключ, пока его длина не превысит шифруемое слово:
     keyword *= len(plaintext) // len(keyword) + 1
-    key = []
-    letters = []
+    key = [] # список для номера в алфавите букв ключа
+    letters = [] #  список для номера в алфавите букв шифруемого слова
+    #  присвоим элементам порядковый номер буквы в алфавите с помощью ключа словаря:
     for i in keyword:
         if 'A'<=i<='Z':
             key.append(d[i])
@@ -31,6 +35,7 @@ def encrypt_vigenere(plaintext, keyword):
             letters.append(d[i])
         else:
             letters.append(d_small[i])
+    #  найдем верную букву по ключу словаря и добавим ее в зашифрованное слово:
     for i in range(len(letters)):
         s = (letters[i]+key[i]) % 26
         if 'A'<=plaintext[1]<='Z':
@@ -41,12 +46,7 @@ def encrypt_vigenere(plaintext, keyword):
             for k, v in d_small.items():  # k-key; v-value
                 if s == v:
                     ciphertext += k
-    print(ciphertext)
     return ciphertext
-
-plaintext = str(input("Введите строку, чтобы ее закодировать: "))
-keyword = str(input("Введите кодовое слово: "))
-encrypt_vigenere(plaintext,keyword)
 
 
 def decrypt_vigenere(ciphertext, keyword):
@@ -58,6 +58,7 @@ def decrypt_vigenere(ciphertext, keyword):
     >>> decrypt_vigenere("LXFOPVEFRNHR", "LEMON")
     'ATTACKATDAWN'
     """
+    #  значения словарей и списков и действия с ними аналогичны функции encrypt_vigenere
     d = {}
     v=0 # v - value
     for i in range(ord('A'), ord('Z')):
@@ -82,6 +83,7 @@ def decrypt_vigenere(ciphertext, keyword):
             letters.append(d[i])
         else:
             letters.append(d_small[i])
+    #  найдем верную букву по ключу словаря и добавим ее в расшифрованное слово:
     for i in range(len(letters)):
         s = (letters[i]-key[i]+26) % 26
         if 'A'<=ciphertext[1]<='Z':
@@ -92,9 +94,4 @@ def decrypt_vigenere(ciphertext, keyword):
             for k, v in d_small.items():
                 if s == v:
                     plaintext += k
-    print(plaintext)
     return plaintext
-
-ciphertext = str(input("Введите строку, чтобы ее раскодировать: "))
-keyword = str(input("Введите кодовое слово: "))
-decrypt_vigenere(ciphertext,keyword)
