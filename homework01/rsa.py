@@ -29,13 +29,11 @@ def gcd(a, b):
     >>> gcd(3, 7)
     1
     """
-    while a != 0 and b != 0:
-        if a > b:
-            a = a % b
-        else:
-            b = b % a
-    result = a + b
-    return result
+    while a mod b != 0:
+        c = a mod b
+        a = b
+        b = c
+    return b
 
 
 def multiplicative_inverse(e, phi):
