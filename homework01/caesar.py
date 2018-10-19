@@ -19,7 +19,6 @@ def encrypt_caesar(plaintext):
             ciphertext += i
     print(ciphertext)
     return ciphertext
-encrypt_caesar(str(input("Введите строку, чтобы ее закодировать:")))
 
 def decrypt_caesar(ciphertext):
     """
@@ -41,4 +40,3 @@ def decrypt_caesar(ciphertext):
             plaintext += i
     print(plaintext)
     return plaintext
-decrypt_caesar(str(input("Введите строку, чтобы ее раскодировать:")))
