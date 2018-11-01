@@ -48,7 +48,6 @@ def multiplicative_inverse(e, phi):
     d=0
     while (d*e)%phi != 1:
         d+=1
-
     return d
 
 
