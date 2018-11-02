@@ -19,6 +19,7 @@ def is_prime(n):
         if n % i == 0:
             return False
     return True
+    pass
 
 
 def gcd(a, b):
@@ -44,11 +45,24 @@ def multiplicative_inverse(e, phi):
     inverse of two numbers.
     >>> multiplicative_inverse(7, 40)
     23
+
+    def  egcd ( a , b ):
+    если a ==  0 :
+        return (b, 0 , 1 )
+    g, y, x = egcd (b % a, a)
+    return (g, x - (b // a) * y, y)
+
+def  modinv ( a , m ):
+    g, x, y = egcd (a, m)
+    если g ! =  1 :
+        raise  Exception ( « Нет модульной инверсии » )
+    return x % m
+
     """
-    d=0
-    while (d*e)%phi != 1:
-        d+=1
-    return d
+
+    return x%phi
+
+
 
 
 def generate_keypair(p, q):
