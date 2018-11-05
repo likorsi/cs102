@@ -29,8 +29,8 @@ def gcd(a, b):
     >>> gcd(3, 7)
     1
     """
-    while a mod b != 0:
-        c = a mod b
+    while a % b != 0:
+        c = a % b
         a = b
         b = c
     return b
