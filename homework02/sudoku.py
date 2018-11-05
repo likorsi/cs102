@@ -109,7 +109,7 @@ def find_possible_values(grid: list, pos: tuple) -> set:
     return values
 
 
-def solve(grid: list) -> Optional[list]:
+def solve(grid: Optional[list]) -> None:
     """ Решение пазла, заданного в grid """
     """ Как решать Судоку?
         1. Найти свободную позицию

@@ -29,8 +29,8 @@ def gcd(a, b):
     >>> gcd(3, 7)
     1
     """
-    while a mod b != 0:
-        c = a mod b
+    while a % b != 0:
+        c = a % b
         a = b
         b = c
     return b
@@ -43,11 +43,21 @@ def multiplicative_inverse(e, phi):
     >>> multiplicative_inverse(7, 40)
     23
     """
-    d=0
-    while (d*e)%phi != 1:
-        d+=1
+    values = []
+    while phi % e != 0:
+        values.append([phi, e, phi % e, phi // e])
+        phi, e = e, phi % e
+    x = 0
+    y = 1
+    i = len(values)
+    while i > 0:
+        i -= 1
+        values[i].append(y)
+        y = x - y * (values[i][3])
+        values[i].append(y)
+        x = values[i][4]
+    d = values[0][-1] % values[0][0]
     return d
-
 
 def generate_keypair(p, q):
     if not (is_prime(p) and is_prime(q)):
