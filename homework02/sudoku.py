@@ -1,5 +1,5 @@
 import random
-from typing import Optional
+from typing import Optional, List, Any, Union
 
 
 def read_sudoku(filename):
@@ -76,7 +76,7 @@ def get_block(values: list, pos: tuple) -> list:
     return values_block
 
 
-def find_empty_positions(grid: list) -> Optional[tuple]:
+def find_empty_positions(grid: list) -> tuple:
     """ Найти первую свободную позицию в пазле
     >>> find_empty_positions([['1', '2', '.'], ['4', '5', '6'], ['7', '8', '9']])
     (0, 2)
@@ -89,7 +89,7 @@ def find_empty_positions(grid: list) -> Optional[tuple]:
         for col in range(len(grid)):
             if grid[row][col] == '.':
                 return row, col
-    return None
+    return ()
 
 
 def find_possible_values(grid: list, pos: tuple) -> set:
@@ -109,7 +109,7 @@ def find_possible_values(grid: list, pos: tuple) -> set:
     return values
 
 
-def solve(grid: Optional[list]) -> None:
+def solve(grid: list) -> list:
     """ Решение пазла, заданного в grid """
     """ Как решать Судоку?
         1. Найти свободную позицию
@@ -132,7 +132,7 @@ def solve(grid: Optional[list]) -> None:
         if solution:
             return solution
     grid[row][col] = '.'
-    return None
+    return []
 
 
 def check_solution(solution: list) -> bool:
