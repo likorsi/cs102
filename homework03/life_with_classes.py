@@ -40,7 +40,7 @@ class GameOfLife:
         self.screen.fill(pygame.Color('white'))
 
         # Создание списка клеток
-        self.clist = self.cell_list()
+        cell = CellList(self.cell_width, self.cell_height, randomize=True)
 
         running = True
         while running:
@@ -50,8 +50,17 @@ class GameOfLife:
             self.draw_grid()
 
             # Отрисовка списка клеток
-
+            for i in range(self.cell_height):
+                for k in range(self.cell_width):
+                    x, y = k * self.cell_size - 1, i * self.cell_size - 1
+                    if clist[i][k]:
+                        pygame.draw.rect(self.screen, pygame.Color('green'), (x, y,
+                                                                              self.cell_size, self.cell_size))
+                    else:
+                        pygame.draw.rect(self.screen, pygame.Color('white'), (x, y,
+                                                                              self.cell_size, self.cell_size))
             # Выполнение одного шага игры (обновление состояния ячеек)
+            cell.update(self.clist)
 
 
             pygame.display.flip()
@@ -73,11 +82,15 @@ class Cell:
 class CellList:
 
     def __init__(self, nrows, ncols, randomize=False):
-        pass
+        self.nrows = nrows
+        self.ncols = ncols
 
     def get_neighbours(self, cell):
         neighbours = []
-        # PUT YOUR CODE HERE
+        row, col = cell
+        neighbours = [self.clist[r][c] for r in range(row - 1, row + 2) for c in range(col - 1, col + 2) if
+                      (0 <= r <= (self.cell_height - 1)) and (0 <= c <= (self.cell_width - 1))
+                      and ((r != row) or (c != col))]
         return neighbours
 
     def update(self):

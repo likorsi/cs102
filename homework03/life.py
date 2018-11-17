@@ -87,7 +87,7 @@ class GameOfLife:
                                         self.cell_size, self.cell_size))
 
 
-    def get_neighbours(self, cell):
+    def get_neighbours(self, cell) -> list:
         """ Вернуть список соседей для указанной ячейки
         :param cell: Позиция ячейки в сетке, задается кортежем вида (row, col)
         :return: Одномерный список ячеек, смежных к ячейке cell
@@ -99,7 +99,7 @@ class GameOfLife:
         return neighbours
 
 
-    def update_cell_list(self, cell_list):
+    def update_cell_list(self, cell_list) -> list:
         """ Выполнить один шаг игры.
         Обновление всех ячеек происходит одновременно. Функция возвращает
         новое игровое поле.
