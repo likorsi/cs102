@@ -6,7 +6,7 @@ from copy import deepcopy
 
 class GameOfLife:
 
-    def __init__(self, width=640, height=480, cell_size=10, speed=10):
+    def __init__(self, width=640, height=480, cell_size=10, speed=10) -> None:
         self.width = width
         self.height = height
         self.cell_size = cell_size
@@ -23,7 +23,7 @@ class GameOfLife:
         # Скорость протекания игры
         self.speed = speed
 
-    def draw_grid(self):
+    def draw_grid(self) -> None:
         """ Отрисовать сетку """
         for x in range(0, self.width, self.cell_size):
             pygame.draw.line(self.screen, pygame.Color('black'),
@@ -32,7 +32,7 @@ class GameOfLife:
             pygame.draw.line(self.screen, pygame.Color('black'),
                     (0, y), (self.width, y))
 
-    def run(self):
+    def run(self) -> None:
         """ Запустить игру """
         pygame.init()
         clock = pygame.time.Clock()
@@ -40,7 +40,7 @@ class GameOfLife:
         self.screen.fill(pygame.Color('white'))
 
         # Создание списка клеток
-        cell = CellList(self.cell_width, self.cell_height, randomize=True)
+        clist = CellList(self.cell_height, self.cell_width, randomize=True)
 
         running = True
         while running:
@@ -50,19 +50,20 @@ class GameOfLife:
             self.draw_grid()
 
             # Отрисовка списка клеток
-            for i in range(self.cell_height):
-                for k in range(self.cell_width):
-                    x, y = k * self.cell_size - 1, i * self.cell_size - 1
-                    if clist[i][k]:
-                        pygame.draw.rect(self.screen, pygame.Color('green'), (x, y,
-                                                                              self.cell_size, self.cell_size))
-                    else:
-                        pygame.draw.rect(self.screen, pygame.Color('white'), (x, y,
-                                                                              self.cell_size, self.cell_size))
+            x, y = 0, 0
+            for cell in clist:
+                if cell.is_alive():
+                    pygame.draw.rect(self.screen, pygame.Color('green'),
+                                     (x, y, self.cell_size, self.cell_size))
+                else:
+                    pygame.draw.rect(self.screen, pygame.Color('white'),
+                                     (x, y, self.cell_size, self.cell_size))
+                x += self.cell_size
+                if x >= self.width:
+                    y += self.cell_size
+                    x = 0
             # Выполнение одного шага игры (обновление состояния ячеек)
-            cell.update(self.clist)
-
-
+            clist.update()
             pygame.display.flip()
             clock.tick(self.speed)
         pygame.quit()
@@ -70,43 +71,97 @@ class GameOfLife:
 
 class Cell:
 
-    def __init__(self, row, col, state=False):
+    def __init__(self, row: int, col: int, state=False) -> None:
         self.row = row
         self.col = col
         self.state = state
 
-    def is_alive(self):
-        return self.state
+    def is_alive(self) -> int:
+        return int(self.state)
 
 
 class CellList:
 
-    def __init__(self, nrows, ncols, randomize=False):
+    def __init__(self, nrows: int, ncols: int, randomize=False) -> None:
         self.nrows = nrows
         self.ncols = ncols
+        self.grid = []
+        for row in range(nrows):
+            self.grid.append([])
+            for col in range(ncols):
+                if randomize:
+                    self.grid.append(Cell(row, col, random.randint(0, 1)))
+                else:
+                    self.grid.append(Cell(row, col, False))
 
-    def get_neighbours(self, cell):
+
+    def get_neighbours(self, cell: Cell) -> list:
+        row, col = cell.row, cell.col
         neighbours = []
-        row, col = cell
-        neighbours = [self.clist[r][c] for r in range(row - 1, row + 2) for c in range(col - 1, col + 2) if
-                      (0 <= r <= (self.cell_height - 1)) and (0 <= c <= (self.cell_width - 1))
-                      and ((r != row) or (c != col))]
+        for r in range(row - 1, row + 2):
+            for c in range(col - 1, col + 2):
+                if (0 <= r <= self.nrows) and (0 <= c <= self.ncols) and (r != row or c != col):
+                    neighbours.append(self.grid[r][c])
         return neighbours
 
-    def update(self):
-        new_clist = deepcopy(self)
-        # PUT YOUR CODE HERE
+    def update(self) -> object:
+        new_clist = deepcopy(self.grid)
+        for cell in self:
+            all_neighbours = sum(c.is_alive() for c in self.get_neighbours(cell))
+            if all_neighbours <= 1 or all_neighbours >= 4:
+                new_clist[cell.row][cell.col].alive = 0
+            elif all_neighbours == 3:
+                new_clist[cell.row][cell.col].alive = 1
+        self.grid = new_clist
         return self
 
     def __iter__(self):
+        self.row, self.col = 0, 0
         return self
 
     def __next__(self):
-        pass
+        if self.row < self.nrows:
+            cell = self.grid[self.row][self.col]
+            self.col += 1
+            if self.col == self.ncols:
+                self.row += 1
+                self.col = 0
+            return cell
+        else:
+            raise StopIteration
 
-    def __str__(self):
-        pass
+
+    def __str__(self) -> str:
+        str = ''
+        for r in range(self.nrows):
+            for c in range(self.ncols):
+                if self.grid[r][c].state:
+                    str += '1'
+                else:
+                    str += '0'
+            str += '\n'
+        return str
 
     @classmethod
-    def from_file(cls, filename):
-        pass
+    def from_file(cls, filename: str) -> 'CellList':
+        file = open(filename).read()
+        grid = []
+        row, col = 0, 0
+        for line in file:
+            clist = []
+            for i in line:
+                if i == '0':
+                    clist.append(Cell(row, col, False))
+                elif i == '1':
+                    clist.append(Cell(row, col, True))
+                col += 1
+            row += 1
+            grid.append(clist)
+        clist = CellList(row, col, False)
+        clist.grid = grid
+        return clist
+
+
+if __name__ == '__main__':
+    game = GameOfLife(600, 540, 20)
+    game.run()

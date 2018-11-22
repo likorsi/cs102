@@ -76,15 +76,16 @@ class GameOfLife:
         """ Отображение списка клеток
         :param rects: Список клеток для отрисовки, представленный в виде матрицы
         """
-        for i in range(self.cell_height):
-            for k in range(self.cell_width):
-                x, y = k * self.cell_size-1, i * self.cell_size-1
-                if clist[i][k]:
-                    pygame.draw.rect(self.screen, pygame.Color('green'), (x, y,
-                                        self.cell_size, self.cell_size))
+        for row in range(self.cell_height):
+            for col in range(self.cell_width):
+                size = self.cell_size - 1
+                x, y = row * self.cell_size + 1, col * self.cell_size + 1
+                if clist[row][col]:
+                    pygame.draw.rect(self.screen, pygame.Color('green'),
+                                     (x, y, size, size))
                 else:
-                    pygame.draw.rect(self.screen, pygame.Color('white'), (x, y,
-                                        self.cell_size, self.cell_size))
+                    pygame.draw.rect(self.screen, pygame.Color('white'),
+                                     (x, y, size, size))
 
 
     def get_neighbours(self, cell) -> list:
@@ -118,3 +119,8 @@ class GameOfLife:
                         new_clist[i][k] = 1
         self.clist = new_clist
         return self.clist
+
+
+if __name__ == '__main__':
+    game = GameOfLife()
+    game.run()
