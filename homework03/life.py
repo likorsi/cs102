@@ -65,9 +65,9 @@ class GameOfLife:
         :return: Список клеток, представленный в виде матрицы
         """
         self.clist = []
-        if randomize == True:
-                for i in range(self.cell_width):
-                    self.clist.append([random.randint(0, 1) for _ in range(self.cell_height)])
+        if randomize:
+                for i in range(self.cell_height):
+                    self.clist.append([random.randint(0, 1) for _ in range(self.cell_width)])
         else:
             self.clist = [[0] * self.cell_width for _ in range(self.cell_height)]
         return self.clist
@@ -78,8 +78,8 @@ class GameOfLife:
         """
         for row in range(self.cell_height):
             for col in range(self.cell_width):
-                size = self.cell_size - 1
                 x, y = row * self.cell_size + 1, col * self.cell_size + 1
+                size = self.cell_size - 1
                 if clist[row][col]:
                     pygame.draw.rect(self.screen, pygame.Color('green'),
                                      (x, y, size, size))
