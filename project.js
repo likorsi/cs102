@@ -15,14 +15,25 @@ function Balance(players, class) {
 	var arr_result = []; //итоговый рейтинг игрока
 
 	for (var x = 0; x < arr_rating.length; x++){
-		var class: {'dps':0.8, 'tank':0.6, 'support':0.4};
+		/*баланс по классу
+		'dps':0.8, 'tank':0.6, 'support':0.4 */
+		for (var x = 0; x < players.length; x++){
+			if (players[x][1] == 'dps'){
+				arr_result[x] = arr_rating[x] * 0.8;
+			} else if (players[x][1] == 'tank'){
+				arr_result[x] = arr_rating[x] * 0.6;
+			} else if (players[x][1] == 'support'){
+				arr_result[x] = arr_rating[x] * 0.4;
+			}
 
-		arr_result[x] = arr_rating[x] * class.players[x][1];
-	
-		if (players[x][2] == True)
+		}
+
+		//баланс при игре пользователя за одиного персонажа/класс 
+		if (players[x][2] == True){
 			arr_result[x] *= 0.6;
-		if (players[x][3] == True)
+		} else if (players[x][3] == True){
 			arr_result[x] *= 0.9;
+		}
 	}
 	
 	return arr_result;
