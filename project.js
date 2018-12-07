@@ -49,7 +49,7 @@ function sort_rating(){
 
 /* вложенный массив с критериями игроков из лобби
 структура: [[SR, class, one_class_player, one_character_player]]
-пример: players = [[1500, 'dps', True, False], [4756, 'support', False. False]] */
+пример: players = [[1500, 'dps', 0, 0], [4756, 'support', 1, 0]] */
 var players = [
 [2000, 'dps', 0, 0], 
 [4500, 'support', 1, 0],
