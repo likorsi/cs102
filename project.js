@@ -1,74 +1,81 @@
-//нормализация[0,1] рейтинга
-function Noramalize_rating(){
-	var max_rating = 5000;
-	
-	for (var x = 0; x < players.length; x++)
-		players[x][0] = players[x][0] / max_rating;
-	return players;
+// Имеющиеся классы (для удобства)
+const HERO_CLASS = {
+	DPS: 'dps',
+	TANK: 'tank',
+	SUPPORT: 'support'
 }
 
+// Коэффициенты влияния класса на баланс
+const HERO_CLASS_RATIO = {
+	[HERO_CLASS.DPS]: 0.8,
+	[HERO_CLASS.TANK]: 0.6,
+	[HERO_CLASS.SUPPORT]: 0.4
+}
 
-function balance() {
-	 Noramalize_rating();
-   /*баланс по классу
-		'dps':0.8, 'tank':0.6, 'support':0.4 */
-		for (var x = 0; x < players.length; x++){
-			if (players[x][1] === 'dps'){
-				arr_result[x] = players[x][0] * 0.8;
-			} else if (players[x][1] === 'tank'){
-				arr_result[x] = players[x][0] * 0.6;
-			} else if (players[x][1] === 'support'){
-				arr_result[x] = players[x][0] * 0.4;
-			}
-      //баланс при игре пользователя за одиного персонажа/класс 
-      if (players[x][2] === 1){
-      arr_result[x] *= 0.6;
-      } else if (players[x][3] === 1){
-      arr_result[x] *= 0.9;
-      }   
+// Получение нормализованного рейтинга для игрока
+function getNormalizedRating(sr) {
+	const maxRating = 5000
+
+	return sr / maxRating
+}
+
+// Проверка на то, что игрок играет персами одного класса
+function isOneClass(classesArray) {
+	return classesArray.length === 1
+}
+
+// Получаем модифицированный массив игроков с новым полем balanceRatio,
+// которое высчитывается для игрока в этой функции (переписанная функция balance).
+function getPlayersWithBalanceRatio(players) {
+	return players.map(function(player) {
+		const normalizedSR = getNormalizedRating(player.sr)
+		const mainClass = player.classes[0]
+
+		let balanceRatio = normalizedSR * HERO_CLASS_RATIO[mainClass]
+
+		if (isOneClass(player.classes)) {
+			balanceRatio *= 0.6
+		} else if (player.isOneTrick) {
+			balanceRatio *= 0.9
 		}
-    
-	return arr_result;
- }
 
-	
+		// Копируем все поля игрока в новую переменную, чтобы не изменить инстанс игрока
+		// (почему так надо - объясню)
+		let newPlayer = Object.assign(player)
 
-function sort_rating(){
-    var n = arr_result.length;
-    for (var i = 0; i < n-1; i++)
-     { for (var j = 0; j < n-1-i; j++)
-        { if (arr_result[j+1] < arr_result[j])
-           { var t = arr_result[j+1]; arr_result[j+1] = arr_result[j]; arr_result[j] = t; }
-        }
-     }   
-    a = arr_result.reverse();
-    arr_result = a;
+		newPlayer.balanceRatio = balanceRatio
 
-    return arr_result;
+		return newPlayer
+	})
 }
 
-/* вложенный массив с критериями игроков из лобби
-структура: [[SR, class, one_class_player, one_character_player]]
-пример: players = [[1500, 'dps', 0, 0], [4756, 'support', 1, 0]] */
-var players = [
-[2000, 'dps', 0, 0], 
-[4500, 'support', 1, 0],
-[2500, 'dps', 0, 0], 
-[3500, 'tank', 1, 1]
-];
+const players = [
+	{
+		id: '1',
+		sr: 2000,
+		classes: [HERO_CLASS.DPS, HERO_CLASS.SUPPORT],
+		isOneTrick: false
+	},
+	{
+		id: '2',
+		sr: 4500,
+		classes: [HERO_CLASS.SUPPORT],
+		isOneTrick: false
+	},
+	{
+		id: '3',
+		sr: 2500,
+		classes: [HERO_CLASS.DPS, HERO_CLASS.TANK],
+		isOneTrick: false
+	},
+	{
+		id: '4',
+		sr: 3500,
+		classes: [HERO_CLASS.TANK],
+		isOneTrick: true
+	},
+]
 
-var arr_result = []; //итоговый рейтинг игрока
+const playersWithBalanceRatio = getPlayersWithBalanceRatio(players)
 
-balance();
-sort_rating();
-
-var team1 = [];
-var team2 = [];
-
-for (var x = 0; x < arr_result.length; x++){
-	team1.push(arr_result[x]);
-	team2.push(arr_result[x+1]);
-	x += 1;
-}
-
-console.log(true)
+console.log(players, playersWithBalanceRatio)
