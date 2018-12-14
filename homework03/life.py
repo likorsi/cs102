@@ -122,5 +122,5 @@ class GameOfLife:
 
 
 if __name__ == '__main__':
-    game = GameOfLife()
+    game = GameOfLife(640,800,10, 10)
     game.run()
