@@ -94,11 +94,6 @@ def get_near_lesson(message:telebot.types.Message) -> telebot.types.Message:
     real_hour = int(datetime.datetime.now().hour)
     real_min = int(datetime.datetime.now().minute)
 
-
-    need_time = {1:'8:20-9:50', 2:'10:00-11:30', 3:'11:40-13:10', 
-    4:'13:30-15:00', 5:'15:20-16:50', 6:'17:00-18:30', 7:'18:40-20:10'}
-
-
     hour = [8, 10 , 11, 13, 15, 17, 18]
     minute = [20, 0, 40, 30, 20, 0, ]
 
@@ -113,7 +108,7 @@ def get_near_lesson(message:telebot.types.Message) -> telebot.types.Message:
 
     resp = 'Ближайшее занятие - '
     need_day = day_list[near_day]
-    web_page = get_page(group, week)
+    web_page = get_page(group, str(week))
     answer = parse_schedule_for_a_day(web_page, need_day)
 
     all_pare = 0
