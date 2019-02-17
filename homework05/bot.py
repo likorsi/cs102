@@ -87,12 +87,12 @@ def get_near_lesson(message:telebot.types.Message) -> telebot.types.Message:
     """ Получить ближайшее занятие """
     _, group = message.text.split()
 
-    near_day = int(datetime.datetime.today().weekday())
-    week = (int(datetime.datetime.now().isocalendar()[1])+1) % 2
+    near_day = int(datetime.datetime.replace(tzinfo=pytz.UTC).today().weekday())
+    week = (int(datetime.datetime.replace(tzinfo=pytz.UTC).now().isocalendar()[1])+1) % 2
     if week ==0:
         week = 2
-    real_hour = int(datetime.datetime.now().hour)
-    real_min = int(datetime.datetime.now().minute)
+    real_hour = int(datetime.datetime.replace(tzinfo=pytz.UTC).now().hour).replace(tzinfo=pytz.UTC)
+    real_min = int(datetime.datetime.replace(tzinfo=pytz.UTC).now().minute)
 
     hour = [8, 10 , 11, 13, 15, 17, 18]
     minute = [20, 0, 40, 30, 20, 0, ]
@@ -146,8 +146,8 @@ def get_tommorow(message: telebot.types.Message) -> telebot.types.Message:
     """ Получить расписание на следующий день """
     _, group = message.text.split()
 
-    near_day = int(datetime.datetime.today().weekday())
-    week = (int(datetime.datetime.now().isocalendar()[1])+1) % 2
+    near_day = int(datetime.datetime.replace(tzinfo=pytz.UTC).today().weekday())
+    week = (int(datetime.datetime.replace(tzinfo=pytz.UTC).now().isocalendar()[1])+1) % 2
     if week == 0:
         week = 2
     if near_day == 6:
