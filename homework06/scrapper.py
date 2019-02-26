@@ -11,13 +11,13 @@ def extract_news(parser):
     title = news.find_all('a', attrs={'class': 'storylink'})
     down = news.find_all('td', attrs={'class': 'subtext'})
     up = news.find_all('tr', attrs={'class': 'athing'})
-    
+
 
     for i in range(0,30):
      
-        url = up[i].find('span', attrs={'class': 'sitestr'})
-        if url:
-            url = url.text
+        if up[i].find('span', attrs={'class': 'sitestr'}):
+            urls = up[i].find('span', attrs={'class': 'sitestr'})
+            url = urls.text
         else:
             url = 'None'
 
@@ -59,23 +59,27 @@ def extract_news(parser):
     return news_list
 
 
-def get_news(url='https://news.ycombinator.com/newest', n_pages=34):
+def extract_next_page(parser):
+    """ Extract next page URL """
+    # PUT YOUR CODE HERE
+    news = parser.find("table", attrs={"class": "itemlist"})
+    page =  news.find('a', attrs={'class': 'morelink'}).get('href')
+    return page
+
+def get_news(url='https://news.ycombinator.com/newest', n_pages=1):
     """ Collect news from a given web page """
     news = []
-    n=31
     while n_pages:
         print("Collecting data from page: {}".format(url))
         response = requests.get(url)
+        for i in range(3):
+            r = requests.get('https://httpbin.org/delay/10')
         soup = BeautifulSoup(response.text, "html.parser")
         news_list = extract_news(soup)
-        #next_page = extract_next_page(soup)
-        url = "https://news.ycombinator.com/newest" + '?next=19164394&n={}'.format(n)
+        next_page = extract_next_page(soup)
+        url = "https://news.ycombinator.com/" + next_page
         news.extend(news_list)
-        n += 30
         n_pages -= 1
     return news
 
 a = get_news()
-for i in range(len(a)):
-    print(a[i])
-    print("\n")

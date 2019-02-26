@@ -40,27 +40,39 @@ def update_news():
 
     last_news = get_news()
 
-    for news in last_news:
-        check = s.query(News).filter(News.author==news['author'], News.title==news['title']).count()
+    for n in last_news:
+        check = s.query(News).filter(News.author == n['author'], News.title == n['title']).count()
         if check == 0:
-            new = News(title=news['title'],author=news['author'],url=news['url'], comments=news['comments'],  points=news['points'])
+            new = News(title=n['title'], author=n['author'], url=n['url'], comments=n['comments'], points=n['points'])
             s.add(new)
     s.commit()
     redirect("/news")
 
 
 
-'''
 @route("/classify")
 def classify_news():
     # 1. Получить список неразмеченных новостей из БД
     # 2. Получить прогнозы для каждой новости
     # 3. Вывести ранжированную таблицу с новостями
+
     s.session()
+    classifier = NaiveBayesClassifier()
 
+    news_lable = s.query(News).filter(News.label != None).all()
+    x_train = [row.title for row in news_lable] 
+    y_train = [row.label for row in news_lable]
+    classifier.fit(x_train, y_train)
 
+    news_lable_none = s.query(News).filter(News.label == None).all()
+    x = [row.title for row in news_lable_none]
+    label = classifier.predict(x)
+
+    classified_news[0] = [news_lable_none[i] for i in range(len(news_lable_none)) if label[i]=='good']
+    classified_news[1] = [news_lable_none[i] for i in range(len(news_lable_none)) if label[i]=='maybe']
+    classified_news[2] = [news_lable_none[i] for i in range(len(news_lable_none)) if label[i]=='never']
     return template('news_recommendations', rows=classified_news)
-'''
+
 
 
 if __name__ == "__main__":
