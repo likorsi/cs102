@@ -72,8 +72,8 @@ def get_news(url='https://news.ycombinator.com/newest', n_pages=1):
     while n_pages:
         print("Collecting data from page: {}".format(url))
         response = requests.get(url)
-        for i in range(3):
-            r = requests.get('https://httpbin.org/delay/10')
+        #for i in range(3):
+        #    r = requests.get('https://httpbin.org/delay/10')
         soup = BeautifulSoup(response.text, "html.parser")
         news_list = extract_news(soup)
         next_page = extract_next_page(soup)
