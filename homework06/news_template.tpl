@@ -30,9 +30,13 @@
             </tbody>
             <tfoot class="full-width">
                 <tr>
-                    <th colspan="7">
-                        <a href="/update" class="ui right floated small primary button">I Wanna more Hacker News!</a>
+                    <th colspan="5">
+                        <a href="/news" class="ui right floated small primary button"> I Wanna more Hacker News! </a>
                     </th>
+                    <th colspan="2">
+                        <a href="/classify" class="ui small primary button">Get recommendations!</a>
+                    </th>
+                    
                 </tr>
             </tfoot>
         </table>

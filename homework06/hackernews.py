@@ -16,17 +16,13 @@ def news_list():
 
 @route("/add_label/")
 def add_label():
-    # 1. Получить значения параметров label и id из GET-запроса
-    # 2. Получить запись из БД с соответствующим id (такая запись только одна!)
-    # 3. Изменить значение метки записи на значение label
-    # 4. Сохранить результат в БД
     s = session()
     label = request.query.label
     row_id = request.query.id
     row = s.query(News).filter(News.id == row_id).one()
     row.label = label
     s.commit()
-    redirect("/news")
+    redirect('/news')
 
 
 @route("/update")
@@ -52,29 +48,29 @@ def update_news():
 
 @route("/classify")
 def classify_news():
-    # 1. Получить список неразмеченных новостей из БД
-    # 2. Получить прогнозы для каждой новости
-    # 3. Вывести ранжированную таблицу с новостями
 
-    s.session()
-    classifier = NaiveBayesClassifier()
-
-    news_lable = s.query(News).filter(News.label != None).all()
-    x_train = [row.title for row in news_lable] 
-    y_train = [row.label for row in news_lable]
-    classifier.fit(x_train, y_train)
+    new_news_lable = s.query(News).filter(News.title not in x_train and News.label != None).all()
+    x_train_new = [row.title for row in new_news_lable]
+    y_train_new = [row.label for row in new_news_lable]
+    classifier.fit(x_train_new, y_train_new)
 
     news_lable_none = s.query(News).filter(News.label == None).all()
     x = [row.title for row in news_lable_none]
     label = classifier.predict(x)
 
-    classified_news[0] = [news_lable_none[i] for i in range(len(news_lable_none)) if label[i]=='good']
-    classified_news[1] = [news_lable_none[i] for i in range(len(news_lable_none)) if label[i]=='maybe']
-    classified_news[2] = [news_lable_none[i] for i in range(len(news_lable_none)) if label[i]=='never']
-    return template('news_recommendations', rows=classified_news)
-
+    classified_news = [[] for _ in range(3)]
+    good = [news_lable_none[i] for i in range(len(news_lable_none)) if label[i] == 'good']
+    maybe = [news_lable_none[i] for i in range(len(news_lable_none)) if label[i] == 'maybe']
+    never = [news_lable_none[i] for i in range(len(news_lable_none)) if label[i] == 'never']
+    return template('news_recommendations', {'good': good,'never': never,'maybe':maybe})
 
 
 if __name__ == "__main__":
     s = session()
+    classifier = NaiveBayesClassifier()
+    news_lable = s.query(News).filter(News.label != None).all()
+    x_train = [row.title for row in news_lable] 
+    y_train = [row.label for row in news_lable]
+    classifier.fit(x_train, y_train)
+
     run(host="localhost", port=8080)

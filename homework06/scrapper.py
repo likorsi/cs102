@@ -13,7 +13,7 @@ def extract_news(parser):
     up = news.find_all('tr', attrs={'class': 'athing'})
 
 
-    for i in range(0,30):
+    for i in range(0,5):
      
         if up[i].find('span', attrs={'class': 'sitestr'}):
             urls = up[i].find('span', attrs={'class': 'sitestr'})
