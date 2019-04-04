@@ -17,7 +17,7 @@ class TestPool(unittest.TestCase):
 		result = counter(word)
 		self.assertEqual(5, result)
 
-	def test_worker_default(self):
+	def test_10_workers_default(self):
 		proc = Pool()
 		big_data = self.data(40)
 		func = proc.map(counter, big_data)

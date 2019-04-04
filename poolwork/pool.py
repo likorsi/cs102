@@ -1,4 +1,4 @@
-from multiprocessing import Process, cpu_count
+from multiprocessing import Process
 from func import counter
 import numpy as np
 import psutil
@@ -54,7 +54,7 @@ if __name__ == '__main__':
 		big_data = f.read().split()
 
 	big_data = ' '.join(big_data)
-	big_data = np.array_split(list(big_data), 8)
+	big_data = np.array_split(list(big_data), 5)
 
 	pool = Pool()
 	results = pool.map(counter, big_data)
