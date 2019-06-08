@@ -8,5 +8,5 @@ def counter(data_chunk):
 			symbols += 1
 
 	proc_name = current_process().name
-	#print(" symbols: {} number of process: {}".format(symbols, proc_name))
+	print(" symbols: {} number of process: {}".format(symbols, proc_name))
 	return symbols

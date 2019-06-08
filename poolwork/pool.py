@@ -5,7 +5,7 @@ import psutil
 import time
 
 class Pool():
-	def __init__(self, min_workers=1, max_workers=10, mem_usage=500):
+	def __init__(self, min_workers=1, max_workers=7, mem_usage=500):
 		self.min_workers = min_workers
 		self.max_workers = max_workers
 		self.mem_usage = mem_usage
@@ -13,6 +13,7 @@ class Pool():
 
 
 	def map(self, function, chunks):
+		
 		procs = []
 
 		proc = Process(target=function, args=(chunks[0],))
