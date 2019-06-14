@@ -2,7 +2,7 @@ import aserv
 import sys
 
 
-class AsyncWSGIServer(http_server.AsyncServer):
+class AsyncWSGIServer(aserv.AsyncServer):
 
     def set_app(self, app):
         self.application = app
@@ -11,7 +11,7 @@ class AsyncWSGIServer(http_server.AsyncServer):
         return self.application
 
 
-class AsyncWSGIRequestHandler(http_server.AsyncHTTPRequestHandler):
+class AsyncWSGIRequestHandler(aserv.AsyncHTTPRequestHandler):
 
     def get_environ(self):
         environ = {
